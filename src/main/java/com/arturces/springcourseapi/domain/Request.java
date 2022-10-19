@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,8 +17,10 @@ import java.util.List;
 @AllArgsConstructor
 @Getter @Setter
 @Entity(name = "request")
-public class Request {
-
+public class Request implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 3734470482855474717L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
