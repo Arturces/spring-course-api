@@ -20,7 +20,7 @@ import java.util.List;
 public class Request implements Serializable {
     @Serial
     private static final long serialVersionUID = 3734470482855474717L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -40,8 +40,8 @@ public class Request implements Serializable {
     private RequestState state;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "owner_id", nullable = false)
+    private User owner;
 
     @OneToMany(mappedBy = "request")
     private List<RequestStage> stages = new ArrayList<RequestStage>();
