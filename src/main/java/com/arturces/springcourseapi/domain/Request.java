@@ -1,6 +1,7 @@
 package com.arturces.springcourseapi.domain;
 
 import com.arturces.springcourseapi.domain.enums.RequestState;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter @Setter
-@Entity(name = "request")
+@Entity
+@Table(name = "request")
 public class Request implements Serializable {
     @Serial
     private static final long serialVersionUID = 3734470482855474717L;
@@ -40,9 +42,10 @@ public class Request implements Serializable {
     private RequestState state;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id", nullable = false)
+    @JoinColumn(name ="owner_id", nullable = false)
     private User owner;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "request")
     private List<RequestStage> stages = new ArrayList<RequestStage>();
 

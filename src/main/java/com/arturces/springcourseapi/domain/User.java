@@ -1,6 +1,8 @@
 package com.arturces.springcourseapi.domain;
 
 import com.arturces.springcourseapi.domain.enums.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter @Setter
 @Entity
-@Table(name = "User")
+@Table(name = "user")
 public class User implements Serializable {
     @Serial
     private static final long serialVersionUID = -5419288627551889644L;
@@ -31,6 +33,8 @@ public class User implements Serializable {
     @Column(length = 75, nullable = false, unique = true)
     private String email;
 
+    @Getter(onMethod = @__({@JsonIgnore}))//ignorar password na serialização
+    @Setter(onMethod = @__({@JsonProperty})) //durante a deserialização consideramos o password
     @Column(length = 100, nullable = false)
     private String password;
 
@@ -38,10 +42,12 @@ public class User implements Serializable {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Getter(onMethod = @__({@JsonIgnore}))
+    @Setter(onMethod = @__({@JsonProperty}))
     @OneToMany(mappedBy = "owner")
     private List<Request> requests = new ArrayList<Request>();
 
-
+    @Getter(onMethod = @__({@JsonIgnore}))
     @OneToMany(mappedBy = "owner")
     private List<RequestStage> stages = new ArrayList<RequestStage>();
 }
