@@ -1,8 +1,10 @@
 package com.arturces.springcourseapi.resource;
 
 
+import com.arturces.springcourseapi.domain.Request;
 import com.arturces.springcourseapi.domain.User;
 import com.arturces.springcourseapi.dto.UserLoginDto;
+import com.arturces.springcourseapi.service.RequestService;
 import com.arturces.springcourseapi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,9 @@ public class UserResource {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RequestService requestService;
 
     @PostMapping
     public ResponseEntity<User> save(@RequestBody User user){
@@ -47,8 +52,15 @@ public class UserResource {
     public ResponseEntity<User> login(@RequestBody UserLoginDto user){
         User loggedUser = userService.login(user.getEmail(), user.getPassword());
         return ResponseEntity.ok(loggedUser);
-
     }
+
+    @GetMapping("/{id}/requests")
+    public ResponseEntity<List<Request>> listAllRequestById(@PathVariable(name = "id") Long id) {
+        List<Request> requests = requestService.listAllByOwnerId(id);
+        return ResponseEntity.ok(requests);
+    }
+
+
 
 
 
