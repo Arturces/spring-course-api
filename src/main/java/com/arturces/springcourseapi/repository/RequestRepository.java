@@ -18,7 +18,7 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
     @Transactional(readOnly = false) //disponivel para leitura e disponivel para a escrita
     @Modifying //modificador da entidade request, modificar o estado
     @Query("UPDATE request SET state = ?2 WHERE id = ?1")
-    public Request updateStatus(Long id, RequestState state);
+    public int updateStatus(Long id, RequestState state);
 
 
 }
