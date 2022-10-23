@@ -1,6 +1,7 @@
 package com.arturces.springcourseapi.service;
 
 import com.arturces.springcourseapi.domain.User;
+import com.arturces.springcourseapi.exception.NotFoundException;
 import com.arturces.springcourseapi.repository.UserRepository;
 import com.arturces.springcourseapi.service.util.HashUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class UserService {
 
     public User getById(Long id){
         Optional<User> result = userRepository.findById(id);
-        return result.get();
+        return result.orElseThrow(()-> new NotFoundException("There are note user with id = " + id));
     }
 
     public List<User> listAll(){

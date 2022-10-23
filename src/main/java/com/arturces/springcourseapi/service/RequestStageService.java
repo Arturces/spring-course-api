@@ -2,6 +2,7 @@ package com.arturces.springcourseapi.service;
 
 import com.arturces.springcourseapi.domain.RequestStage;
 import com.arturces.springcourseapi.domain.enums.RequestState;
+import com.arturces.springcourseapi.exception.NotFoundException;
 import com.arturces.springcourseapi.repository.RequestRepository;
 import com.arturces.springcourseapi.repository.RequestStageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,8 @@ public class RequestStageService {
 
     public RequestStage getById(Long id){
         Optional<RequestStage> result = requestStageRepository.findById(id);
-        return result.get();
+        return result.orElseThrow(()-> new NotFoundException("There are note user with id = " + id));
+
     }
 
     public List<RequestStage> listAllByRequestId(Long requestId){
