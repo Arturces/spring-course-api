@@ -3,8 +3,13 @@ package com.arturces.springcourseapi.service;
 import com.arturces.springcourseapi.domain.Request;
 import com.arturces.springcourseapi.domain.enums.RequestState;
 import com.arturces.springcourseapi.exception.NotFoundException;
+import com.arturces.springcourseapi.model.PageModel;
+import com.arturces.springcourseapi.model.PageRequestModel;
 import com.arturces.springcourseapi.repository.RequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -46,5 +51,12 @@ public class RequestService {
         return requests;
     }
 
+    public PageModel<Request> listAllByOwnerIdOnLazyModel(Long ownerId, PageRequestModel pr) {
+        Pageable pageable = PageRequest.of(pr.getPage(), pr.getSize());
+        Page<Request> page = requestRepository.findAllByOwnerId(ownerId, pageable);
+
+        PageModel<Request> pm = new PageModel<>((int)page.getTotalElements(),page.getSize(), page.getTotalPages(), page.getContent());
+        return pm;
+    }
 
 }
