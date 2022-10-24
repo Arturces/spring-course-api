@@ -4,6 +4,7 @@ package com.arturces.springcourseapi.resource;
 import com.arturces.springcourseapi.domain.Request;
 import com.arturces.springcourseapi.domain.User;
 import com.arturces.springcourseapi.dto.UserLoginDto;
+import com.arturces.springcourseapi.dto.UserUpdateRoleDto;
 import com.arturces.springcourseapi.model.PageModel;
 import com.arturces.springcourseapi.model.PageRequestModel;
 import com.arturces.springcourseapi.service.RequestService;
@@ -73,4 +74,18 @@ public class UserResource {
         PageModel<Request> pm = requestService.listAllByOwnerIdOnLazyModel(id,pr);
         return ResponseEntity.ok(pm);
     }
+
+    @PatchMapping("/role/{id}")
+    public ResponseEntity<?> updateRole(@PathVariable(name = "id") Long id, @RequestBody UserUpdateRoleDto userDto) {
+        User user = new User();
+        user.setId(id);
+        user.setRole(userDto.getRole());
+
+        userService.updateRole(user);
+
+        return ResponseEntity.ok().build();
+    }
+
+
+
 }
