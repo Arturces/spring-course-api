@@ -2,6 +2,9 @@ package com.arturces.springcourseapi.resource;
 
 import com.arturces.springcourseapi.domain.Request;
 import com.arturces.springcourseapi.domain.RequestStage;
+import com.arturces.springcourseapi.domain.User;
+import com.arturces.springcourseapi.model.PageModel;
+import com.arturces.springcourseapi.model.PageRequestModel;
 import com.arturces.springcourseapi.service.RequestService;
 import com.arturces.springcourseapi.service.RequestStageService;
 import org.apache.coyote.Response;
@@ -43,16 +46,24 @@ public class RequestResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<Request>> listAll() {
-        List<Request> requests = requestService.listAll();
-        return ResponseEntity.ok(requests);
+    public ResponseEntity<PageModel<Request>> listAll(@RequestParam(value = "page") int page, @RequestParam(value = "size") int size) {
+        PageRequestModel pr = new PageRequestModel(page, size);
+        PageModel<Request> pm = requestService.listAllOnLazyMode(pr);
+
+        return ResponseEntity.ok(pm);
     }
 
     //http://localhost:8080/request/1/request-stages  - buscar estagios de pedidos de um pedido especifico
     @GetMapping("/{id}/request-stages")
-    public ResponseEntity<List<RequestStage>> listAllRequestStagesById(@PathVariable(name = "id") Long id) {
-        List<RequestStage> stages = stageService.listAllByRequestId(id);
-        return ResponseEntity.ok(stages);
+    public ResponseEntity<PageModel<RequestStage>> listAllRequestStagesById(
+            @PathVariable(name = "id") Long id,
+            @RequestParam(value = "page") int page,
+            @RequestParam(value = "size") int size) {
+        PageRequestModel pr = new PageRequestModel(page, size);
+
+        PageModel<RequestStage> pm = stageService.listAllByRequestIdOnLazyModel(id, pr);
+
+        return ResponseEntity.ok(pm);
     }
 
 }

@@ -1,11 +1,17 @@
 package com.arturces.springcourseapi.service;
 
+import com.arturces.springcourseapi.domain.Request;
 import com.arturces.springcourseapi.domain.RequestStage;
 import com.arturces.springcourseapi.domain.enums.RequestState;
 import com.arturces.springcourseapi.exception.NotFoundException;
+import com.arturces.springcourseapi.model.PageModel;
+import com.arturces.springcourseapi.model.PageRequestModel;
 import com.arturces.springcourseapi.repository.RequestRepository;
 import com.arturces.springcourseapi.repository.RequestStageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -21,7 +27,7 @@ public class RequestStageService {
     @Autowired
     private RequestRepository requestRepository;
 
-    public RequestStage save(RequestStage stage){
+    public RequestStage save(RequestStage stage) {
         stage.setRealizationDate(new Date());
 
         RequestStage createdStage = requestStageRepository.save(stage);
@@ -34,14 +40,22 @@ public class RequestStageService {
         return createdStage;
     }
 
-    public RequestStage getById(Long id){
+    public RequestStage getById(Long id) {
         Optional<RequestStage> result = requestStageRepository.findById(id);
-        return result.orElseThrow(()-> new NotFoundException("There are note user with id = " + id));
+        return result.orElseThrow(() -> new NotFoundException("There are note user with id = " + id));
 
     }
 
-    public List<RequestStage> listAllByRequestId(Long requestId){
+    public List<RequestStage> listAllByRequestId(Long requestId) {
         List<RequestStage> stages = requestStageRepository.findAllByRequestId(requestId);
         return stages;
+    }
+
+    public PageModel<RequestStage> listAllByRequestIdOnLazyModel(Long requestId, PageRequestModel pr) {
+        Pageable pageable = PageRequest.of(pr.getPage(), pr.getSize());
+        Page<RequestStage> page = requestStageRepository.findAllByRequestId(requestId, pageable);
+
+        PageModel<RequestStage> pm = new PageModel<>((int) page.getTotalElements(), page.getSize(), page.getTotalPages(), page.getContent());
+        return pm;
     }
 }

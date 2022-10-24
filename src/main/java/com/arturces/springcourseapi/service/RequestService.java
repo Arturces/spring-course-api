@@ -1,6 +1,7 @@
 package com.arturces.springcourseapi.service;
 
 import com.arturces.springcourseapi.domain.Request;
+import com.arturces.springcourseapi.domain.User;
 import com.arturces.springcourseapi.domain.enums.RequestState;
 import com.arturces.springcourseapi.exception.NotFoundException;
 import com.arturces.springcourseapi.model.PageModel;
@@ -46,17 +47,25 @@ public class RequestService {
         return requests;
     }
 
+    public PageModel<Request> listAllOnLazyMode(PageRequestModel pr) {
+        Pageable pageable = PageRequest.of(pr.getPage(), pr.getSize());
+        Page<Request> page = requestRepository.findAll(pageable);
+
+        PageModel<Request> pm = new PageModel<>((int) page.getTotalElements(), page.getSize(), page.getTotalPages(), page.getContent());
+        return pm;
+    }
+
     public List<Request> listAllByOwnerId(Long ownerId) {
         List<Request> requests = requestRepository.findAllByOwnerId(ownerId);
         return requests;
     }
 
-    public PageModel<Request> listAllByOwnerIdOnLazyModel(Long ownerId, PageRequestModel pr) {
-        Pageable pageable = PageRequest.of(pr.getPage(), pr.getSize());
-        Page<Request> page = requestRepository.findAllByOwnerId(ownerId, pageable);
+        public PageModel<Request> listAllByOwnerIdOnLazyModel(Long ownerId, PageRequestModel pr) {
+            Pageable pageable = PageRequest.of(pr.getPage(), pr.getSize());
+            Page<Request> page = requestRepository.findAllByOwnerId(ownerId, pageable);
 
-        PageModel<Request> pm = new PageModel<>((int)page.getTotalElements(),page.getSize(), page.getTotalPages(), page.getContent());
-        return pm;
-    }
+            PageModel<Request> pm = new PageModel<>((int)page.getTotalElements(),page.getSize(), page.getTotalPages(), page.getContent());
+            return pm;
+        }
 
 }
