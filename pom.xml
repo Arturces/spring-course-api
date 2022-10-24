@@ -13,8 +13,10 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>spring-course-api</name>
     <description>spring-course-api</description>
+    <packaging>war</packaging>
     <properties>
         <java.version>17</java.version>
+        <skipTests>true</skipTests>
     </properties>
     <dependencies>
         <dependency>
@@ -52,11 +54,6 @@
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>1.7</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
