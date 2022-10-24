@@ -3,6 +3,8 @@ package com.arturces.springcourseapi.resource;
 import com.arturces.springcourseapi.domain.Request;
 import com.arturces.springcourseapi.domain.RequestStage;
 import com.arturces.springcourseapi.domain.User;
+import com.arturces.springcourseapi.dto.RequestSaveDto;
+import com.arturces.springcourseapi.dto.RequestUpdateDto;
 import com.arturces.springcourseapi.model.PageModel;
 import com.arturces.springcourseapi.model.PageRequestModel;
 import com.arturces.springcourseapi.service.RequestService;
@@ -13,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -26,13 +29,16 @@ public class RequestResource {
     private RequestStageService stageService;
 
     @PostMapping
-    public ResponseEntity<Request> save(@RequestBody Request request) {
+    public ResponseEntity<Request> save(@RequestBody @Valid RequestSaveDto requestDto) {
+        Request request = requestDto.transformToRequest();
+
         Request createdRequest = requestService.save(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdRequest);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Request> update(@PathVariable(name = "id") Long id, @RequestBody Request request) {
+    public ResponseEntity<Request> update(@PathVariable(name = "id") Long id, @RequestBody @Valid RequestUpdateDto requestDto) {
+       Request request = requestDto.transformToRequest();
         request.setId(id);
 
         Request updateRequest = requestService.udpdate(request);
