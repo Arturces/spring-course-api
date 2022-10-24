@@ -4,8 +4,6 @@ package com.arturces.springcourseapi.resource;
 import com.arturces.springcourseapi.domain.Request;
 import com.arturces.springcourseapi.domain.User;
 import com.arturces.springcourseapi.dto.UserLoginDto;
-import com.arturces.springcourseapi.dto.UserSaveDto;
-import com.arturces.springcourseapi.dto.UserUpdateDto;
 import com.arturces.springcourseapi.dto.UserUpdateRoleDto;
 import com.arturces.springcourseapi.model.PageModel;
 import com.arturces.springcourseapi.model.PageRequestModel;
@@ -17,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -31,19 +28,15 @@ public class UserResource {
     private RequestService requestService;
 
     @PostMapping
-    public ResponseEntity<User> save(@RequestBody @Valid UserSaveDto userDto) {
-        User userToSave = userDto.transformToUser();
-
-        User createdUser = userService.save(userToSave);
+    public ResponseEntity<User> save(@RequestBody User user) {
+        User createdUser = userService.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> update(@PathVariable(name = "id") Long id, @RequestBody @Valid UserUpdateDto userDto) {
-        User userToUpdate = userDto.transformToUser();
-
-        userToUpdate.setId(id);
-        User updateUser = userService.update(userToUpdate);
+    public ResponseEntity<User> update(@PathVariable(name = "id") Long id, @RequestBody User user) {
+        user.setId(id);
+        User updateUser = userService.update(user);
         return ResponseEntity.ok(updateUser);
     }
 
@@ -65,7 +58,7 @@ public class UserResource {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody @Valid UserLoginDto user) {
+    public ResponseEntity<User> login(@RequestBody UserLoginDto user) {
         User loggedUser = userService.login(user.getEmail(), user.getPassword());
         return ResponseEntity.ok(loggedUser);
     }
@@ -83,7 +76,7 @@ public class UserResource {
     }
 
     @PatchMapping("/role/{id}")
-    public ResponseEntity<?> updateRole(@PathVariable(name = "id") Long id, @RequestBody @Valid UserUpdateRoleDto userDto) {
+    public ResponseEntity<?> updateRole(@PathVariable(name = "id") Long id, @RequestBody UserUpdateRoleDto userDto) {
         User user = new User();
         user.setId(id);
         user.setRole(userDto.getRole());
