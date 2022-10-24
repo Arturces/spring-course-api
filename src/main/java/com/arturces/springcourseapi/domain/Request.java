@@ -2,6 +2,7 @@ package com.arturces.springcourseapi.domain;
 
 import com.arturces.springcourseapi.domain.enums.RequestState;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -46,6 +47,7 @@ public class Request implements Serializable {
     private User owner;
 
     @JsonIgnore
+    //@Getter(onMethod = @__({@JsonIgnore}))
     @OneToMany(mappedBy = "request")
     private List<RequestStage> stages = new ArrayList<RequestStage>();
 
