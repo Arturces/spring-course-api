@@ -2,6 +2,8 @@ package com.arturces.springcourseapi.security;
 
 import com.arturces.springcourseapi.constant.SecurityConstants;
 import com.arturces.springcourseapi.dto.UserLoginResponseDto;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Component;
@@ -26,7 +28,14 @@ public class JwtManager {
         Long expireIn = calendar.getTimeInMillis();
 
         return new UserLoginResponseDto(jwt, expireIn, SecurityConstants.JWT_PROVIDER);
+    }
 
+    public Claims parseToken(String jwt) throws JwtException {
+        Claims claims = Jwts.parser()
+                .setSigningKey(SecurityConstants.API_KEY)
+                .parseClaimsJws(jwt)
+                .getBody();
 
+        return claims;
     }
 }
