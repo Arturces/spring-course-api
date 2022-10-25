@@ -29,40 +29,41 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String jwt = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if (jwt == null || !jwt.startsWith(SecurityConstants.JWT_PROVIDER)) {
-            ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED.value(), SecurityConstants.JWT_INVALID_MSG, new Date());
-            PrintWriter writer = response.getWriter();
+            String jwt = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-            ObjectMapper mapper = new ObjectMapper();
-            String ApiErrorString = mapper.writeValueAsString(apiError);
+            if (jwt == null || !jwt.startsWith(SecurityConstants.JWT_PROVIDER)) {
+                ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED.value(), SecurityConstants.JWT_INVALID_MSG, new Date());
+                PrintWriter writer = response.getWriter();
 
-            writer.write(ApiErrorString);
+                ObjectMapper mapper = new ObjectMapper();
+                String ApiErrorString = mapper.writeValueAsString(apiError);
 
-            response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                writer.write(ApiErrorString);
 
-            return;
-        }
+                response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
 
-        jwt = jwt.replace(SecurityConstants.JWT_PROVIDER, "");
+                return;
+            }
 
-        try {
-            Claims claims = new JwtManager().parseToken(jwt);
-            String email = claims.getSubject();
-            List<String> roles = (List<String>) claims.get(SecurityConstants.JWT_ROLE_KEY);
+            jwt = jwt.replace(SecurityConstants.JWT_PROVIDER, "");
 
-            List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
-            roles.forEach(role -> {
-                grantedAuthorities.add(new SimpleGrantedAuthority(role));
-            });
+            try {
+                Claims claims = new JwtManager().parseToken(jwt);
+                String email = claims.getSubject();
+                List<String> roles = (List<String>) claims.get(SecurityConstants.JWT_ROLE_KEY);
 
-            Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, grantedAuthorities);
+                List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
+                roles.forEach(role -> {
+                    grantedAuthorities.add(new SimpleGrantedAuthority(role));
+                });
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, grantedAuthorities);
 
-        } catch (Exception e) {
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            } catch (Exception e) {
                 ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED.value(), e.getMessage(), new Date());
                 PrintWriter writer = response.getWriter();
 
@@ -76,6 +77,6 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
                 return;
             }
-                filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response);
         }
     }
