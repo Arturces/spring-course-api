@@ -12,13 +12,15 @@ import com.arturces.springcourseapi.model.PageRequestModel;
 import com.arturces.springcourseapi.service.RequestService;
 import com.arturces.springcourseapi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -29,6 +31,9 @@ public class UserResource {
 
     @Autowired
     private RequestService requestService;
+
+    @Autowired
+    private AuthenticationManager authManager;
 
     @PostMapping
     public ResponseEntity<User> save(@RequestBody @Valid UserSaveDto userDto) {
@@ -66,8 +71,12 @@ public class UserResource {
 
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody @Valid UserLoginDto user) {
-        User loggedUser = userService.login(user.getEmail(), user.getPassword());
-        return ResponseEntity.ok(loggedUser);
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user.getEmail(),user.getPassword());
+        Authentication auth = authManager.authenticate(token);
+
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        return ResponseEntity.ok(null);
     }
 
     @GetMapping("/{id}/requests")
