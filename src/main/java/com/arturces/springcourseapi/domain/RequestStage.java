@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -16,7 +15,7 @@ import java.util.Date;
 @Getter @Setter
 @Entity(name = "request_stage")
 public class RequestStage implements Serializable {
-    @Serial
+
     private static final long serialVersionUID = 4307480004224458879L;
 
     @Id

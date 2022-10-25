@@ -15,7 +15,7 @@
     <description>spring-course-api</description>
     <packaging>war</packaging>
     <properties>
-        <java.version>17</java.version>
+        <java.version>11</java.version>
         <skipTests>true</skipTests>
     </properties>
     <dependencies>

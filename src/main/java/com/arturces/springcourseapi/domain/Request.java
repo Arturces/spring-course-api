@@ -2,14 +2,12 @@ package com.arturces.springcourseapi.domain;
 
 import com.arturces.springcourseapi.domain.enums.RequestState;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,7 +19,7 @@ import java.util.List;
 @Entity
 @Table(name = "request")
 public class Request implements Serializable {
-    @Serial
+
     private static final long serialVersionUID = 3734470482855474717L;
 
     @Id
