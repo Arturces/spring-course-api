@@ -3,10 +3,7 @@ package com.arturces.springcourseapi.resource;
 
 import com.arturces.springcourseapi.domain.Request;
 import com.arturces.springcourseapi.domain.User;
-import com.arturces.springcourseapi.dto.UserLoginDto;
-import com.arturces.springcourseapi.dto.UserSaveDto;
-import com.arturces.springcourseapi.dto.UserUpdateDto;
-import com.arturces.springcourseapi.dto.UserUpdateRoleDto;
+import com.arturces.springcourseapi.dto.*;
 import com.arturces.springcourseapi.model.PageModel;
 import com.arturces.springcourseapi.model.PageRequestModel;
 import com.arturces.springcourseapi.security.JwtManager;
@@ -76,7 +73,7 @@ public class UserResource {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody @Valid UserLoginDto user) {
+    public ResponseEntity<UserLoginResponseDto> login(@RequestBody @Valid UserLoginDto user) {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user.getEmail(),user.getPassword());
         Authentication auth = authManager.authenticate(token);
 
@@ -90,9 +87,7 @@ public class UserResource {
                 .map(authority -> authority.getAuthority())
                 .collect(Collectors.toList());
 
-        String jwt = jwtManager.createToken(email,roles);
-
-        return ResponseEntity.ok(jwt);
+        return ResponseEntity.ok(jwtManager.createToken(email,roles));
     }
 
     @GetMapping("/{id}/requests")
