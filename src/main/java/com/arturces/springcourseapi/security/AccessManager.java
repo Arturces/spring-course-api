@@ -6,7 +6,6 @@ import com.arturces.springcourseapi.exception.NotFoundException;
 import com.arturces.springcourseapi.repository.UserRepository;
 import com.arturces.springcourseapi.service.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 

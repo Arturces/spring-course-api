@@ -20,14 +20,14 @@ import java.util.List;
 public class  ResourceExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ApiError> handlerNotFOundException(NotFoundException ex) {
+    public ResponseEntity<ApiError> handlerNotFoundException(NotFoundException ex) {
         ApiError error = new ApiError(HttpStatus.NOT_FOUND.value(), ex.getMessage(), new Date());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ApiError> handlerNBadCredentialsException(BadCredentialsException ex) {
+    public ResponseEntity<ApiError> handlerBadCredentialsException(BadCredentialsException ex) {
         ApiError error = new ApiError(HttpStatus.UNAUTHORIZED.value(), ex.getMessage(), new Date());
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);

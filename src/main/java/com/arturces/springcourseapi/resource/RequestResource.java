@@ -2,15 +2,12 @@ package com.arturces.springcourseapi.resource;
 
 import com.arturces.springcourseapi.domain.Request;
 import com.arturces.springcourseapi.domain.RequestStage;
-import com.arturces.springcourseapi.domain.User;
 import com.arturces.springcourseapi.dto.RequestSaveDto;
 import com.arturces.springcourseapi.dto.RequestUpdateDto;
 import com.arturces.springcourseapi.model.PageModel;
 import com.arturces.springcourseapi.model.PageRequestModel;
-import com.arturces.springcourseapi.security.AccessManager;
 import com.arturces.springcourseapi.service.RequestService;
 import com.arturces.springcourseapi.service.RequestStageService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +15,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "requests")
@@ -30,8 +26,6 @@ public class RequestResource {
     @Autowired
     private RequestStageService stageService;
 
-    @Autowired
-    private AccessManager accessManager;
 
     @PostMapping
     public ResponseEntity<Request> save(@RequestBody @Valid RequestSaveDto requestDto) {

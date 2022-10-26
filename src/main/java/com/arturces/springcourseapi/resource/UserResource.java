@@ -6,7 +6,6 @@ import com.arturces.springcourseapi.domain.User;
 import com.arturces.springcourseapi.dto.*;
 import com.arturces.springcourseapi.model.PageModel;
 import com.arturces.springcourseapi.model.PageRequestModel;
-import com.arturces.springcourseapi.security.AccessManager;
 import com.arturces.springcourseapi.security.JwtManager;
 import com.arturces.springcourseapi.service.RequestService;
 import com.arturces.springcourseapi.service.UserService;
@@ -41,14 +40,11 @@ public class UserResource {
     @Autowired
     private JwtManager jwtManager;
 
-    @Autowired
-    private AccessManager accessManager;
 
     @Secured({"ROLE_ADMINISTRATOR"})
     @PostMapping
     public ResponseEntity<User> save(@RequestBody @Valid UserSaveDto userDto) {
         User userToSave = userDto.transformToUser();
-
         User createdUser = userService.save(userToSave);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
@@ -57,7 +53,6 @@ public class UserResource {
     @PutMapping("/{id}")
     public ResponseEntity<User> update(@PathVariable(name = "id") Long id, @RequestBody @Valid UserUpdateDto userDto) {
         User userToUpdate = userDto.transformToUser();
-
         userToUpdate.setId(id);
         User updateUser = userService.update(userToUpdate);
         return ResponseEntity.ok(updateUser);
@@ -74,7 +69,7 @@ public class UserResource {
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size) {
 
-        PageRequestModel pr = new PageRequestModel(page,size);
+        PageRequestModel pr = new PageRequestModel(page, size);
         PageModel<User> pm = userService.listAllOnLazyMode(pr);
 
         return ResponseEntity.ok(pm);
@@ -82,7 +77,7 @@ public class UserResource {
 
     @PostMapping("/login")
     public ResponseEntity<UserLoginResponseDto> login(@RequestBody @Valid UserLoginDto user) {
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user.getEmail(),user.getPassword());
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
         Authentication auth = authManager.authenticate(token);
 
         SecurityContextHolder.getContext().setAuthentication(auth);
@@ -95,18 +90,18 @@ public class UserResource {
                 .map(authority -> authority.getAuthority())
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(jwtManager.createToken(email,roles));
+        return ResponseEntity.ok(jwtManager.createToken(email, roles));
     }
 
     @GetMapping("/{id}/requests")
     public ResponseEntity<PageModel<Request>> listAllRequestById(
             @PathVariable(name = "id") Long id,
-            @RequestParam(value = "size", defaultValue = "10")int size,
-            @RequestParam(value = "page",defaultValue = "0") int page) {
-       PageRequestModel pr = new PageRequestModel(page, size);
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "page", defaultValue = "0") int page) {
+        PageRequestModel pr = new PageRequestModel(page, size);
 
 
-        PageModel<Request> pm = requestService.listAllByOwnerIdOnLazyModel(id,pr);
+        PageModel<Request> pm = requestService.listAllByOwnerIdOnLazyModel(id, pr);
         return ResponseEntity.ok(pm);
     }
 
@@ -121,7 +116,4 @@ public class UserResource {
 
         return ResponseEntity.ok().build();
     }
-
-
-
 }
