@@ -45,7 +45,7 @@ public class S3Service {
 
                 String location = getFileLocation(s3FileName);
 
-                UploadFileModel uploadFileModel = new UploadFileModel(originalName, s3FileName);
+                UploadFileModel uploadFileModel = new UploadFileModel(originalName, location);
                 uploadFileModelList.add(uploadFileModel);
 
             } catch (IOException e) {
