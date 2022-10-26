@@ -1,11 +1,13 @@
 package com.arturces.springcourseapi.resource;
 
 import com.arturces.springcourseapi.domain.Request;
+import com.arturces.springcourseapi.domain.RequestFile;
 import com.arturces.springcourseapi.domain.RequestStage;
 import com.arturces.springcourseapi.dto.RequestSaveDto;
 import com.arturces.springcourseapi.dto.RequestUpdateDto;
 import com.arturces.springcourseapi.model.PageModel;
 import com.arturces.springcourseapi.model.PageRequestModel;
+import com.arturces.springcourseapi.service.RequestFileService;
 import com.arturces.springcourseapi.service.RequestService;
 import com.arturces.springcourseapi.service.RequestStageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "requests")
@@ -25,6 +29,9 @@ public class RequestResource {
 
     @Autowired
     private RequestStageService stageService;
+
+    @Autowired
+    private RequestFileService fileService;
 
 
     @PostMapping
@@ -74,5 +81,26 @@ public class RequestResource {
 
         return ResponseEntity.ok(pm);
     }
+
+    @GetMapping("/{id}/files")
+    public ResponseEntity<PageModel<RequestFile>> listAllFilesById(
+            @PathVariable(name = "id") Long id,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size",defaultValue = "10") int size) {
+
+        PageRequestModel pr = new PageRequestModel(page, size);
+        PageModel<RequestFile> pm = fileService.listAllByRequestId(id,pr);
+
+        return ResponseEntity.ok(pm);
+    }
+        //https://valor.com/?par1=2&par2=3
+    @PostMapping("/{id}/files")
+    public ResponseEntity<List<RequestFile>> upload(@RequestParam("files")MultipartFile[] files, @PathVariable(name = "id") Long id ) {
+           List<RequestFile> requestFiles = fileService.upload(id,files);
+
+           return ResponseEntity.status(HttpStatus.CREATED).body(requestFiles);
+    }
+
+
 
 }
