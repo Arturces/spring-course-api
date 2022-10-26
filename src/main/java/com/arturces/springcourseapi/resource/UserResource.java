@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -66,10 +67,8 @@ public class UserResource {
 
     @GetMapping
     public ResponseEntity<PageModel<User>> listAll(
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size) {
-
-        PageRequestModel pr = new PageRequestModel(page, size);
+            @RequestParam Map<String, String> params) {
+        PageRequestModel pr = new PageRequestModel(params);
         PageModel<User> pm = userService.listAllOnLazyMode(pr);
 
         return ResponseEntity.ok(pm);

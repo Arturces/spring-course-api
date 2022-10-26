@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "requests")
@@ -45,7 +46,7 @@ public class RequestResource {
     @PreAuthorize("@accessManager.isRequestOwner(#id)")
     @PutMapping("/{id}")
     public ResponseEntity<Request> update(@PathVariable(name = "id") Long id, @RequestBody @Valid RequestUpdateDto requestDto) {
-       Request request = requestDto.transformToRequest();
+        Request request = requestDto.transformToRequest();
         request.setId(id);
 
         Request updateRequest = requestService.udpdate(request);
@@ -60,10 +61,8 @@ public class RequestResource {
 
     @GetMapping
     public ResponseEntity<PageModel<Request>> listAll(
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size) {
-
-        PageRequestModel pr = new PageRequestModel(page, size);
+            @RequestParam Map<String, String> params) {
+        PageRequestModel pr = new PageRequestModel(params);
         PageModel<Request> pm = requestService.listAllOnLazyMode(pr);
 
         return ResponseEntity.ok(pm);
@@ -73,10 +72,8 @@ public class RequestResource {
     @GetMapping("/{id}/request-stages")
     public ResponseEntity<PageModel<RequestStage>> listAllRequestStagesById(
             @PathVariable(name = "id") Long id,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size",defaultValue = "10") int size) {
-
-        PageRequestModel pr = new PageRequestModel(page, size);
+            @RequestParam Map<String, String> params) {
+        PageRequestModel pr = new PageRequestModel(params);
         PageModel<RequestStage> pm = stageService.listAllByRequestIdOnLazyModel(id, pr);
 
         return ResponseEntity.ok(pm);
@@ -85,22 +82,20 @@ public class RequestResource {
     @GetMapping("/{id}/files")
     public ResponseEntity<PageModel<RequestFile>> listAllFilesById(
             @PathVariable(name = "id") Long id,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size",defaultValue = "10") int size) {
-
-        PageRequestModel pr = new PageRequestModel(page, size);
-        PageModel<RequestFile> pm = fileService.listAllByRequestId(id,pr);
+            @RequestParam Map<String, String> params) {
+        PageRequestModel pr = new PageRequestModel(params);
+        PageModel<RequestFile> pm = fileService.listAllByRequestId(id, pr);
 
         return ResponseEntity.ok(pm);
     }
-        //https://valor.com/?par1=2&par2=3
+
+    //https://valor.com/?par1=2&par2=3
     @PostMapping("/{id}/files")
-    public ResponseEntity<List<RequestFile>> upload(@RequestParam("files")MultipartFile[] files, @PathVariable(name = "id") Long id ) {
-           List<RequestFile> requestFiles = fileService.upload(id,files);
+    public ResponseEntity<List<RequestFile>> upload(@RequestParam("files") MultipartFile[] files, @PathVariable(name = "id") Long id) {
+        List<RequestFile> requestFiles = fileService.upload(id, files);
 
-           return ResponseEntity.status(HttpStatus.CREATED).body(requestFiles);
+        return ResponseEntity.status(HttpStatus.CREATED).body(requestFiles);
     }
-
 
 
 }
